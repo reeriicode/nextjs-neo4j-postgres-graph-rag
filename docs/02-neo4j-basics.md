@@ -216,7 +216,7 @@ MATCH (p:Person) RETURN p.name, p.age
 | p.name | p.age |
 |---|---|
 | "สมชาย" | 30 |
-| "อามีนะห์" | 25 |
+| "อามิ" | 25 |
 | "วิภา" | 28 |
 
 **กรองด้วย WHERE และเรียงด้วย ORDER BY**
@@ -267,11 +267,11 @@ MATCH (a:Person {name: "สมชาย"}), (b:Product {name: "กระติ�
 ```
 
 ```cypher
-MATCH (a:Person {name: "อามีนะห์"}), (b:Product {name: "หูฟัง"}) CREATE (a)-[:BOUGHT {qty: 1}]->(b)
+MATCH (a:Person {name: "อามิ"}), (b:Product {name: "หูฟัง"}) CREATE (a)-[:BOUGHT {qty: 1}]->(b)
 ```
 
 ```cypher
-MATCH (a:Person {name: "อามีนะห์"}), (b:Product {name: "ลำโพง"}) CREATE (a)-[:BOUGHT {qty: 1}]->(b)
+MATCH (a:Person {name: "อามิ"}), (b:Product {name: "ลำโพง"}) CREATE (a)-[:BOUGHT {qty: 1}]->(b)
 ```
 
 ```cypher
@@ -285,7 +285,7 @@ MATCH (a:Person {name: "สมชาย"}), (c:City {name: "กรุงเท�
 ```
 
 ```cypher
-MATCH (a:Person {name: "อามีนะห์"}), (c:City {name: "ปัตตานี"}) CREATE (a)-[:LIVES_IN]->(c)
+MATCH (a:Person {name: "อามิ"}), (c:City {name: "ปัตตานี"}) CREATE (a)-[:LIVES_IN]->(c)
 ```
 
 ```cypher
@@ -303,8 +303,8 @@ MATCH (n)-[r]->(m) RETURN n, r, m
 ```
 (สมชาย)   ──BOUGHT──►   (หูฟัง)       (สมชาย)   ──LIVES_IN──► (กรุงเทพ)
 (สมชาย)   ──BOUGHT──►   (กระติกน้ำ)    (วิภา)    ──LIVES_IN──► (กรุงเทพ)
-(อามีนะห์) ──BOUGHT──►   (หูฟัง)       (อามีนะห์) ──LIVES_IN──► (ปัตตานี)
-(อามีนะห์) ──BOUGHT──►   (ลำโพง)
+(อามิ)     ──BOUGHT──►   (หูฟัง)       (อามิ)     ──LIVES_IN──► (ปัตตานี)
+(อามิ)     ──BOUGHT──►   (ลำโพง)
 (วิภา)    ──BOUGHT──►   (ลำโพง)
 ```
 
@@ -366,7 +366,7 @@ ORDER BY total DESC
 |---|---|---|
 | "วิภา" | 3 | 2970 |
 | "สมชาย" | 3 | 2470 |
-| "อามีนะห์" | 2 | 2280 |
+| "อามิ" | 2 | 2280 |
 
 **เดินกราฟหลายก้าว: ทุกอย่างที่อยู่ห่างจากสมชายไม่เกิน 2 ก้าว**
 
@@ -383,7 +383,7 @@ ORDER BY hops
 | 1 | "หูฟัง" |
 | 1 | "กระติกน้ำ" |
 | 1 | "กรุงเทพ" |
-| 2 | "อามีนะห์" ← ซื้อหูฟังเหมือนกัน |
+| 2 | "อามิ" ← ซื้อหูฟังเหมือนกัน |
 | 2 | "วิภา" ← อยู่กรุงเทพเหมือนกัน |
 
 > **นี่คือหัวใจของ Graph RAG:** เริ่มจาก node ที่เกี่ยวกับคำถาม แล้วเดินออกไป 1-2 ก้าว เพื่อเก็บข้อมูลที่เกี่ยวข้องทั้งหมดไปให้ AI อ่าน (ดูคู่มือที่ 3)

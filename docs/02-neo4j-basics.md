@@ -182,7 +182,7 @@ CREATE (:Person {name: "สมชาย", age: 30})
 **สร้างหลายตัวในคำสั่งเดียว** (คั่นด้วย `,`)
 
 ```cypher
-CREATE (:Person {name: "อามีนะห์", age: 25}), (:Person {name: "วิภา", age: 28})
+CREATE (:Person {name: "อามิ", age: 25}), (:Person {name: "วิภา", age: 28})
 ```
 
 ```cypher

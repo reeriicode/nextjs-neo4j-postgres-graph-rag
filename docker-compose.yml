@@ -1,0 +1,29 @@
+services:
+  # ฐานข้อมูลหลัก: ข้อมูลร้านค้า + ตารางกราฟ
+  postgres:
+    image: postgres:16
+    container_name: rag-graph-postgres
+    environment:
+      POSTGRES_USER: shop
+      POSTGRES_PASSWORD: shop
+      POSTGRES_DB: shop
+    ports:
+      - "5434:5432" # เครื่อง:5434 -> container:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  # Graph database: ไว้ดูกราฟเป็นภาพและฝึกคำสั่ง Cypher
+  neo4j:
+    image: neo4j:5-community
+    container_name: rag-graph-neo4j
+    environment:
+      NEO4J_AUTH: neo4j/password123
+    ports:
+      - "7474:7474" # Neo4j Browser (หน้าเว็บ)
+      - "7687:7687" # Bolt (โปรแกรมเชื่อมต่อผ่านพอร์ตนี้)
+    volumes:
+      - neo4jdata:/data
+
+volumes:
+  pgdata:
+  neo4jdata:

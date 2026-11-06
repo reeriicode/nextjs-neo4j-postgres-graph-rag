@@ -1,0 +1,63 @@
+### ใช้กับ VS Code extension "REST Client" (กด Send Request เหนือแต่ละ request)
+@base = http://localhost:3000
+
+### 1. ใส่ข้อมูลตัวอย่าง
+POST {{base}}/api/seed
+
+### 2. สร้าง knowledge graph (ใช้ Claude ดึงแนวคิดจากคำอธิบายและรีวิว)
+POST {{base}}/api/graph/build
+
+### 2b. สร้างกราฟเฉพาะส่วนที่มาจากตาราง (ไม่ใช้ LLM)
+POST {{base}}/api/graph/build
+Content-Type: application/json
+
+{ "useLLM": false }
+
+### 3. ดูสรุปกราฟ
+GET {{base}}/api/graph
+
+### 4. ดูว่า "กันน้ำ" เชื่อมกับอะไรบ้าง
+GET {{base}}/api/graph?name=กันน้ำ&hops=1
+
+### 5. ถามแบบเชื่อมหลายต่อ: จังหวัด -> ลูกค้า -> สินค้า -> คุณสมบัติ
+POST {{base}}/api/rag/ask
+Content-Type: application/json
+
+{ "question": "มีสินค้ากันน้ำอะไรบ้างที่ลูกค้าในยะลาซื้อ" }
+
+### 6. ถามหาสินค้าที่คล้ายกัน (เชื่อมผ่านการใช้งานเดียวกัน)
+POST {{base}}/api/rag/ask
+Content-Type: application/json
+
+{ "question": "ถ้าจะไปแคมป์ปิ้ง ควรซื้ออะไรบ้าง และลูกค้าติเรื่องอะไร" }
+
+### 7. ถามจากรีวิว
+POST {{base}}/api/rag/ask
+Content-Type: application/json
+
+{ "question": "สินค้ายี่ห้อ SoundGo มีปัญหาอะไรบ้างตามรีวิว", "hops": 1 }
+
+### 8. คัดลอกกราฟไป Neo4j (แล้วเปิด http://localhost:7474)
+POST {{base}}/api/neo4j/sync
+
+### --- API ร้านค้าปกติ ---
+
+GET {{base}}/api/products
+
+###
+GET {{base}}/api/customers
+
+###
+GET {{base}}/api/orders
+
+###
+POST {{base}}/api/orders
+Content-Type: application/json
+
+{ "customerId": 2, "items": [{ "productId": 3, "quantity": 1 }] }
+
+###
+POST {{base}}/api/reviews
+Content-Type: application/json
+
+{ "productId": 3, "customerId": 2, "rating": 2, "comment": "แบตหมดเร็วกว่าที่คิด สายรัดข้อมือคัน" }

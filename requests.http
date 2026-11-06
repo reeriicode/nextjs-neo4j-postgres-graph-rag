@@ -23,7 +23,7 @@ GET {{base}}/api/graph?name=กันน้ำ&hops=1
 POST {{base}}/api/rag/ask
 Content-Type: application/json
 
-{ "question": "มีสินค้ากันน้ำอะไรบ้างที่ลูกค้าในยะลาซื้อ" }
+{ "question": "มีสินค้ากันน้ำอะไรบ้างที่ลูกค้าในกรุงเทพซื้อ" }
 
 ### 6. ถามหาสินค้าที่คล้ายกัน (เชื่อมผ่านการใช้งานเดียวกัน)
 POST {{base}}/api/rag/ask

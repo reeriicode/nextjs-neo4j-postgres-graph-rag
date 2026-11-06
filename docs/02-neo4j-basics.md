@@ -31,7 +31,7 @@
 
 **Neo4j** คือ **graph database** เก็บข้อมูลเป็น "จุด" กับ "เส้นเชื่อม" แทนการเก็บเป็นตาราง และใช้ภาษา **Cypher** ในการค้นหา
 
-ตัวอย่าง: "ลูกค้าที่อยู่ยะลาซื้ออะไรบ้าง"
+ตัวอย่าง: "ลูกค้าที่อยู่กรุงเทพซื้ออะไรบ้าง"
 
 **ฐานข้อมูลแบบตาราง (SQL)** ต้อง JOIN หลายตาราง
 
@@ -41,13 +41,13 @@ FROM customers c
 JOIN orders o       ON o.customer_id = c.id
 JOIN order_items i  ON i.order_id = o.id
 JOIN products p     ON p.id = i.product_id
-WHERE c.province = 'ยะลา';
+WHERE c.province = 'กรุงเทพ';
 ```
 
 **Neo4j (Cypher)** เขียนเป็นรูปเส้นทางตรงๆ
 
 ```cypher
-MATCH (:City {name: "ยะลา"})<-[:LIVES_IN]-(c:Person)-[:BOUGHT]->(p:Product)
+MATCH (:City {name: "กรุงเทพ"})<-[:LIVES_IN]-(c:Person)-[:BOUGHT]->(p:Product)
 RETURN c.name, p.name
 ```
 
@@ -190,7 +190,7 @@ CREATE (:Product {name: "หูฟัง", price: 1290}), (:Product {name: "ล�
 ```
 
 ```cypher
-CREATE (:City {name: "ยะลา"}), (:City {name: "ปัตตานี"})
+CREATE (:City {name: "กรุงเทพ"}), (:City {name: "ปัตตานี"})
 ```
 
 **ดูทุกอย่างที่สร้าง**
@@ -281,7 +281,7 @@ MATCH (a:Person {name: "วิภา"}), (b:Product {name: "ลำโพง"}) C
 **ที่อยู่**
 
 ```cypher
-MATCH (a:Person {name: "สมชาย"}), (c:City {name: "ยะลา"}) CREATE (a)-[:LIVES_IN]->(c)
+MATCH (a:Person {name: "สมชาย"}), (c:City {name: "กรุงเทพ"}) CREATE (a)-[:LIVES_IN]->(c)
 ```
 
 ```cypher
@@ -289,7 +289,7 @@ MATCH (a:Person {name: "อามีนะห์"}), (c:City {name: "ปัต�
 ```
 
 ```cypher
-MATCH (a:Person {name: "วิภา"}), (c:City {name: "ยะลา"}) CREATE (a)-[:LIVES_IN]->(c)
+MATCH (a:Person {name: "วิภา"}), (c:City {name: "กรุงเทพ"}) CREATE (a)-[:LIVES_IN]->(c)
 ```
 
 **ดูภาพกราฟทั้งหมด**
@@ -301,14 +301,14 @@ MATCH (n)-[r]->(m) RETURN n, r, m
 ข้อมูลที่ได้ (ในหน้าเว็บจะเป็นภาพวงกลมเชื่อมกัน):
 
 ```
-(สมชาย)   ──BOUGHT──►   (หูฟัง)       (สมชาย)   ──LIVES_IN──► (ยะลา)
-(สมชาย)   ──BOUGHT──►   (กระติกน้ำ)    (วิภา)    ──LIVES_IN──► (ยะลา)
+(สมชาย)   ──BOUGHT──►   (หูฟัง)       (สมชาย)   ──LIVES_IN──► (กรุงเทพ)
+(สมชาย)   ──BOUGHT──►   (กระติกน้ำ)    (วิภา)    ──LIVES_IN──► (กรุงเทพ)
 (อามีนะห์) ──BOUGHT──►   (หูฟัง)       (อามีนะห์) ──LIVES_IN──► (ปัตตานี)
 (อามีนะห์) ──BOUGHT──►   (ลำโพง)
 (วิภา)    ──BOUGHT──►   (ลำโพง)
 ```
 
-สังเกตว่า "หูฟัง" มีเส้นเข้า 2 เส้น และ "ยะลา" มีเส้นเข้า 2 เส้น node เหล่านี้คือจุดที่ทำให้ข้อมูลเชื่อมถึงกัน
+สังเกตว่า "หูฟัง" มีเส้นเข้า 2 เส้น และ "กรุงเทพ" มีเส้นเข้า 2 เส้น node เหล่านี้คือจุดที่ทำให้ข้อมูลเชื่อมถึงกัน
 
 > **ระวัง:** รัน `CREATE` ซ้ำจะได้ข้อมูลซ้ำ ถ้าต้องการ "สร้างเมื่อยังไม่มี" ให้ใช้ `MERGE` (ข้อ 9)
 
@@ -328,10 +328,10 @@ MATCH (p:Person)-[:BOUGHT]->(prod:Product) RETURN p.name, prod.name
 MATCH (p:Person)-[b:BOUGHT]->(prod:Product) RETURN p.name, b.qty, prod.name
 ```
 
-**เชื่อม 2 ต่อ: ลูกค้าในยะลาซื้ออะไร** (จังหวัด → ลูกค้า → สินค้า)
+**เชื่อม 2 ต่อ: ลูกค้าในกรุงเทพซื้ออะไร** (จังหวัด → ลูกค้า → สินค้า)
 
 ```cypher
-MATCH (c:City {name: "ยะลา"})<-[:LIVES_IN]-(p:Person)-[:BOUGHT]->(prod:Product) RETURN p.name, prod.name
+MATCH (c:City {name: "กรุงเทพ"})<-[:LIVES_IN]-(p:Person)-[:BOUGHT]->(prod:Product) RETURN p.name, prod.name
 ```
 
 | p.name | prod.name |
@@ -382,9 +382,9 @@ ORDER BY hops
 |---|---|
 | 1 | "หูฟัง" |
 | 1 | "กระติกน้ำ" |
-| 1 | "ยะลา" |
+| 1 | "กรุงเทพ" |
 | 2 | "อามีนะห์" ← ซื้อหูฟังเหมือนกัน |
-| 2 | "วิภา" ← อยู่ยะลาเหมือนกัน |
+| 2 | "วิภา" ← อยู่กรุงเทพเหมือนกัน |
 
 > **นี่คือหัวใจของ Graph RAG:** เริ่มจาก node ที่เกี่ยวกับคำถาม แล้วเดินออกไป 1-2 ก้าว เพื่อเก็บข้อมูลที่เกี่ยวข้องทั้งหมดไปให้ AI อ่าน (ดูคู่มือที่ 3)
 
@@ -416,7 +416,7 @@ MERGE (c:City {name: "สงขลา"}) RETURN c.name
 MATCH (c:City) RETURN count(c) AS cities
 ```
 
-ได้ `3` (ยะลา, ปัตตานี, สงขลา) ไม่ใช่ 4
+ได้ `3` (กรุงเทพ, ปัตตานี, สงขลา) ไม่ใช่ 4
 
 **ลบ property**
 
@@ -574,7 +574,7 @@ const driver = neo4j.driver("bolt://localhost:7687", neo4j.auth.basic("neo4j", "
 const { records } = await driver.executeQuery(
   `MATCH (c:City {name: $city})<-[:LIVES_IN]-(p:Person)-[:BOUGHT]->(prod:Product)
    RETURN p.name AS person, prod.name AS product`,
-  { city: "ยะลา" },
+  { city: "กรุงเทพ" },
 );
 
 for (const r of records) {
@@ -627,7 +627,7 @@ node neo4j-test.mjs
 
 ใช้ข้อมูลจากข้อ 5-7 (ถ้าลบไปแล้ว ให้สร้างใหม่)
 
-1. เพิ่มลูกค้า "ฟาริด" อายุ 35 อยู่ยะลา ซื้อหูฟัง 1 ชิ้น
+1. เพิ่มลูกค้า "ฟาริด" อายุ 35 อยู่กรุงเทพ ซื้อหูฟัง 1 ชิ้น
 2. หาว่าลูกค้าแต่ละจังหวัดซื้อสินค้ารวมกี่ชิ้น
 3. เพิ่มสินค้า "พัดลม" ราคา 450 แล้วหาสินค้าที่ไม่มีใครซื้อเลย (คำใบ้: `WHERE NOT (p)<-[:BOUGHT]-()`)
 4. สร้าง node `:Category {name: "อิเล็กทรอนิกส์"}` แล้วเชื่อมหูฟังและลำโพงด้วยเส้น `:IN_CATEGORY`
@@ -640,7 +640,7 @@ node neo4j-test.mjs
 // 1
 CREATE (f:Person {name: "ฟาริด", age: 35})
 WITH f
-MATCH (c:City {name: "ยะลา"}), (p:Product {name: "หูฟัง"})
+MATCH (c:City {name: "กรุงเทพ"}), (p:Product {name: "หูฟัง"})
 CREATE (f)-[:LIVES_IN]->(c), (f)-[:BOUGHT {qty: 1}]->(p)
 ```
 

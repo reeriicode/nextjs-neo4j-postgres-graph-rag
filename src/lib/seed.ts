@@ -25,11 +25,11 @@ const products = [
 ];
 
 const customers = [
-  { name: "สมชาย ใจดี", province: "ยะลา" },
+  { name: "สมชาย ใจดี", province: "กรุงเทพ" },
   { name: "อามีนะห์ สาและ", province: "ปัตตานี" },
   { name: "วิภา รักษ์ดี", province: "สงขลา" },
-  { name: "ฟาริด หะยีมะ", province: "ยะลา" },
-  { name: "นภัส ทองคำ", province: "กรุงเทพมหานคร" },
+  { name: "ฟาริด หะยีมะ", province: "กรุงเทพ" },
+  { name: "นภัส ทองคำ", province: "กรุงเทพ" },
 ];
 
 // [ลูกค้า index, [[สินค้า index, จำนวน], ...]]

@@ -2,7 +2,7 @@
 
 > **Next.js (API) + PostgreSQL + TypeORM + Neo4j + Claude**
 >
-> เป้าหมาย: สร้างระบบขายของแบบง่ายที่ถามคำถามเป็นภาษาไทยได้ เช่น "ลูกค้าในยะลาซื้ออะไรบ้าง" โดยระบบค้นข้อมูลจาก **knowledge graph** แล้วให้ Claude ตอบ
+> เป้าหมาย: สร้างระบบขายของแบบง่ายที่ถามคำถามเป็นภาษาไทยได้ เช่น "ลูกค้าในกรุงเทพซื้ออะไรบ้าง" โดยระบบค้นข้อมูลจาก **knowledge graph** แล้วให้ Claude ตอบ
 >
 > ทดสอบกับ Next.js 16.4, TypeORM 1.1, PostgreSQL 16, Neo4j 5.26, Windows 11
 >
@@ -40,10 +40,10 @@
 
 **Graph RAG** = RAG ที่เก็บข้อมูลเป็น **กราฟ** (node + เส้นเชื่อม) จึงตอบคำถามที่ต้อง **เชื่อมข้อมูลหลายต่อ** ได้ดี
 
-ตัวอย่าง: "มีสินค้ากันน้ำอะไรบ้างที่ลูกค้าในยะลาซื้อ" ต้องเชื่อม 3 ต่อ
+ตัวอย่าง: "มีสินค้ากันน้ำอะไรบ้างที่ลูกค้าในกรุงเทพซื้อ" ต้องเชื่อม 3 ต่อ
 
 ```
-(ยะลา) ◄─อาศัยอยู่ที่─ (สมชาย) ─ซื้อ─► (หูฟัง SoundGo) ─มีคุณสมบัติ─► (กันน้ำ)
+(กรุงเทพ) ◄─อาศัยอยู่ที่─ (สมชาย) ─ซื้อ─► (หูฟัง SoundGo) ─มีคุณสมบัติ─► (กันน้ำ)
 ```
 
 ### สถาปัตยกรรม
@@ -509,7 +509,7 @@ export class Review {
 
 | ชนิด node | มาจาก | ตัวอย่าง |
 |---|---|---|
-| Product, Category, Customer, Province | ตารางร้านค้า | `หูฟังบลูทูธ SoundGo X1`, `ยะลา` |
+| Product, Category, Customer, Province | ตารางร้านค้า | `หูฟังบลูทูธ SoundGo X1`, `กรุงเทพ` |
 | Feature, UseCase, Problem, Brand | Claude อ่านจากข้อความ | `กันน้ำ`, `วิ่ง`, `แบตหมดเร็ว`, `SoundGo` |
 
 ```ts
@@ -735,11 +735,11 @@ const products = [
 ];
 
 const customers = [
-  { name: "สมชาย ใจดี", province: "ยะลา" },
+  { name: "สมชาย ใจดี", province: "กรุงเทพ" },
   { name: "อามีนะห์ สาและ", province: "ปัตตานี" },
   { name: "วิภา รักษ์ดี", province: "สงขลา" },
-  { name: "ฟาริด หะยีมะ", province: "ยะลา" },
-  { name: "นภัส ทองคำ", province: "กรุงเทพมหานคร" },
+  { name: "ฟาริด หะยีมะ", province: "กรุงเทพ" },
+  { name: "นภัส ทองคำ", province: "กรุงเทพ" },
 ];
 
 // [ลูกค้า index, [[สินค้า index, จำนวน], ...]]
@@ -1364,9 +1364,9 @@ curl.exe -X POST http://localhost:3000/api/graph/build
 {
   "usedLLM": false,
   "warning": "ไม่ได้ใช้ LLM (ไม่มี ANTHROPIC_API_KEY หรือส่ง useLLM: false) กราฟจึงมีแค่ข้อมูลจากตาราง",
-  "nodes": 20,
+  "nodes": 19,
   "edges": 37,
-  "nodesByType": { "Category": 3, "Product": 8, "Customer": 5, "Province": 4 },
+  "nodesByType": { "Category": 3, "Product": 8, "Customer": 5, "Province": 3 },
   "edgesByRelation": { "IN_CATEGORY": 8, "LIVES_IN": 5, "BOUGHT": 14, "REVIEWED": 10 },
   "extraction": []
 }
@@ -1392,16 +1392,16 @@ docker exec -it rag-graph-postgres psql -U shop -d shop -c "SELECT type, name FR
 | `expandSubgraph` | **เดินกราฟ** ออกจาก node ตั้งต้น N ก้าว ด้วย SQL `WITH RECURSIVE` |
 | `subgraphToText` | แปลง subgraph เป็น **ข้อความ** ให้ Claude อ่าน |
 
-**`WITH RECURSIVE` ทำงานอย่างไร** (เริ่มจาก "ยะลา", hops = 2)
+**`WITH RECURSIVE` ทำงานอย่างไร** (เริ่มจาก "กรุงเทพ", hops = 2)
 
 ```
-รอบที่ 0: ยะลา
-รอบที่ 1: ใครเชื่อมกับยะลา?           → สมชาย, ฟาริด
+รอบที่ 0: กรุงเทพ
+รอบที่ 1: ใครเชื่อมกับกรุงเทพ?           → สมชาย, ฟาริด, นภัส
 รอบที่ 2: ใครเชื่อมกับสมชาย/ฟาริด?     → หูฟัง, กระติกน้ำ, รองเท้าวิ่ง, สมาร์ทวอทช์
 ครบ 2 ก้าว หยุด
 ```
 
-เทียบกับ Cypher ใน Neo4j จะเขียนได้สั้นกว่ามาก: `MATCH (s {name: "ยะลา"})-[*1..2]-(m) RETURN m`
+เทียบกับ Cypher ใน Neo4j จะเขียนได้สั้นกว่ามาก: `MATCH (s {name: "กรุงเทพ"})-[*1..2]-(m) RETURN m`
 
 ```ts
 // ขั้นที่ 2 ของ Graph RAG: ค้นหาส่วนของกราฟที่เกี่ยวกับคำถาม (Retrieval)
@@ -1544,7 +1544,7 @@ const KEYWORD_SCHEMA = {
 
 const KEYWORD_SYSTEM = `ดึงคำสำคัญจากคำถามของลูกค้าร้านค้า เพื่อใช้ค้นหา node ใน knowledge graph
 คำสำคัญคือ ชื่อสินค้า ประเภทสินค้า ยี่ห้อ คุณสมบัติ การใช้งาน ปัญหา ชื่อลูกค้า หรือจังหวัด
-ตอบเป็นคำสั้นๆ ภาษาไทย 1-3 คำต่อรายการ เช่น "หูฟัง", "กันน้ำ", "วิ่ง", "ยะลา"`;
+ตอบเป็นคำสั้นๆ ภาษาไทย 1-3 คำต่อรายการ เช่น "หูฟัง", "กันน้ำ", "วิ่ง", "กรุงเทพ"`;
 
 const ANSWER_SYSTEM = `คุณเป็นผู้ช่วยของร้านค้าออนไลน์
 ตอบคำถามโดยใช้เฉพาะข้อมูลจาก knowledge graph ที่ให้มาเท่านั้น
@@ -1667,26 +1667,26 @@ export const GET = handle(async (req: Request) => {
 POST http://localhost:3000/api/rag/ask
 Content-Type: application/json
 
-{ "question": "ลูกค้าในยะลาซื้ออะไรบ้าง", "hops": 2 }
+{ "question": "ลูกค้าในกรุงเทพซื้ออะไรบ้าง", "hops": 2 }
 ```
 
 ผลที่ได้ (ตัดมาบางส่วน) จะเห็นทุกขั้นตอน:
 
 ```json
 {
-  "question": "ลูกค้าในยะลาซื้ออะไรบ้าง",
+  "question": "ลูกค้าในกรุงเทพซื้ออะไรบ้าง",
   "answer": "(ไม่มี ANTHROPIC_API_KEY จึงข้ามขั้นตอนสร้างคำตอบ ดู context ด้านล่างเพื่อดูข้อมูลที่ระบบค้นเจอ)",
   "steps": {
     "1_keywords": [],
-    "2_seedNodes": ["Province: ยะลา"],
-    "3_subgraph": { "hops": 2, "nodeCount": 7, "edgeCount": 12, "nodes": ["..."] },
+    "2_seedNodes": ["Province: กรุงเทพ"],
+    "3_subgraph": { "hops": 2, "nodeCount": 8, "edgeCount": 17, "nodes": ["..."] },
     "4_context": [
       "## รายละเอียดสินค้า",
       "- หูฟังบลูทูธ SoundGo X1: ราคา 1290 บาท, คงเหลือ 25 ชิ้น. หูฟังไร้สายยี่ห้อ SoundGo กันน้ำ...",
       "...",
       "## ความสัมพันธ์ในกราฟ",
       "- [ลูกค้า] สมชาย ใจดี --ซื้อ (รวม 1 ชิ้น)--> [สินค้า] หูฟังบลูทูธ SoundGo X1",
-      "- [ลูกค้า] สมชาย ใจดี --อาศัยอยู่ที่--> [จังหวัด] ยะลา",
+      "- [ลูกค้า] สมชาย ใจดี --อาศัยอยู่ที่--> [จังหวัด] กรุงเทพ",
       "- [ลูกค้า] ฟาริด หะยีมะ --ซื้อ (รวม 1 ชิ้น)--> [สินค้า] หูฟังบลูทูธ SoundGo X1",
       "..."
     ]
@@ -1696,11 +1696,11 @@ Content-Type: application/json
 
 | ขั้นตอน | อ่านผลอย่างไร |
 |---|---|
-| `2_seedNodes` | ระบบเจอคำว่า "ยะลา" ในคำถาม ตรงกับ node จังหวัด |
-| `3_subgraph` | เดินออกไป 2 ก้าว ได้ 7 node (ยะลา, ลูกค้า 2 คน, สินค้า 4 ชิ้น) |
+| `2_seedNodes` | ระบบเจอคำว่า "กรุงเทพ" ในคำถาม ตรงกับ node จังหวัด |
+| `3_subgraph` | เดินออกไป 2 ก้าว ได้ 8 node (กรุงเทพ, ลูกค้า 3 คน, สินค้า 4 ชิ้น) |
 | `4_context` | ข้อความที่จะส่งให้ Claude อ่าน **นี่คือสิ่งที่ "Retrieval" หาได้** |
 
-ดูเพื่อนบ้านของ node ใดก็ได้ (เปิดในเบราว์เซอร์): http://localhost:3000/api/graph?name=ยะลา&hops=1
+ดูเพื่อนบ้านของ node ใดก็ได้ (เปิดในเบราว์เซอร์): http://localhost:3000/api/graph?name=กรุงเทพ&hops=1
 
 ---
 
@@ -1815,7 +1815,7 @@ curl.exe -X POST http://localhost:3000/api/neo4j/sync
 ```
 
 ```json
-{"nodes":20,"edges":37,"browser":"เปิด http://localhost:7474 แล้วลองคำสั่ง MATCH (n)-[r]->(m) RETURN n, r, m"}
+{"nodes":19,"edges":37,"browser":"เปิด http://localhost:7474 แล้วลองคำสั่ง MATCH (n)-[r]->(m) RETURN n, r, m"}
 ```
 
 เปิด http://localhost:7474 เข้าระบบด้วย `neo4j` / `password123` แล้วลองคำสั่งเหล่านี้ทีละคำสั่ง
@@ -1832,10 +1832,10 @@ MATCH (n)-[r]->(m) RETURN n, r, m
 MATCH (n:Entity) RETURN [l IN labels(n) WHERE l <> "Entity"][0] AS type, count(*) AS total ORDER BY total DESC
 ```
 
-**ลูกค้าในยะลาซื้ออะไร** (คำถามเดียวกับจุดทดสอบ 3)
+**ลูกค้าในกรุงเทพซื้ออะไร** (คำถามเดียวกับจุดทดสอบ 3)
 
 ```cypher
-MATCH (p:Province {name: "ยะลา"})<-[:LIVES_IN]-(c:Customer)-[b:BOUGHT]->(prod:Product)
+MATCH (p:Province {name: "กรุงเทพ"})<-[:LIVES_IN]-(c:Customer)-[b:BOUGHT]->(prod:Product)
 RETURN c.name AS customer, prod.name AS product, b.quantity AS qty
 ```
 
@@ -1861,10 +1861,10 @@ MATCH (pr:Province)<-[:LIVES_IN]-(:Customer)-[b:BOUGHT]->(p:Product)
 RETURN pr.name AS province, sum(b.quantity * p.price) AS sales ORDER BY sales DESC
 ```
 
-**สิ่งที่ `expandSubgraph` ทำ เขียนเป็น Cypher** (เดิน 2 ก้าวจาก "ยะลา")
+**สิ่งที่ `expandSubgraph` ทำ เขียนเป็น Cypher** (เดิน 2 ก้าวจาก "กรุงเทพ")
 
 ```cypher
-MATCH path = (s:Entity {name: "ยะลา"})-[*1..2]-(m:Entity) RETURN path
+MATCH path = (s:Entity {name: "กรุงเทพ"})-[*1..2]-(m:Entity) RETURN path
 ```
 
 ---
@@ -1915,10 +1915,10 @@ curl.exe -X POST http://localhost:3000/api/graph/build
 POST http://localhost:3000/api/rag/ask
 Content-Type: application/json
 
-{ "question": "มีสินค้ากันน้ำอะไรบ้างที่ลูกค้าในยะลาซื้อ" }
+{ "question": "มีสินค้ากันน้ำอะไรบ้างที่ลูกค้าในกรุงเทพซื้อ" }
 ```
 
-ครั้งนี้ `answer` จะเป็นคำตอบจาก Claude และ `1_keywords` จะมีคำที่ Claude ดึงจากคำถาม เช่น `["กันน้ำ", "ยะลา"]`
+ครั้งนี้ `answer` จะเป็นคำตอบจาก Claude และ `1_keywords` จะมีคำที่ Claude ดึงจากคำถาม เช่น `["กันน้ำ", "กรุงเทพ"]`
 
 คำถามอื่นที่น่าลอง:
 
@@ -1975,7 +1975,7 @@ GET {{base}}/api/graph?name=กันน้ำ&hops=1
 POST {{base}}/api/rag/ask
 Content-Type: application/json
 
-{ "question": "มีสินค้ากันน้ำอะไรบ้างที่ลูกค้าในยะลาซื้อ" }
+{ "question": "มีสินค้ากันน้ำอะไรบ้างที่ลูกค้าในกรุงเทพซื้อ" }
 
 ### 6. ถามหาสินค้าที่คล้ายกัน (เชื่อมผ่านการใช้งานเดียวกัน)
 POST {{base}}/api/rag/ask

@@ -16,6 +16,7 @@
 | [docs/01-nextjs-basics.md](docs/01-nextjs-basics.md) | ติดตั้ง Next.js, สร้างหน้าเว็บ, สร้าง API, ให้หน้าเว็บเรียก API |
 | [docs/02-neo4j-basics.md](docs/02-neo4j-basics.md) | Neo4j คืออะไร, ติดตั้งด้วย Docker, คำสั่ง Cypher พื้นฐาน |
 | [docs/03-graph-rag-project.md](docs/03-graph-rag-project.md) | สร้างโปรเจกต์นี้ทีละขั้นตั้งแต่ศูนย์ พร้อมโค้ดครบทุกไฟล์ |
+| [docs/04-postgres-basics.md](docs/04-postgres-basics.md) | PostgreSQL คืออะไร, ติดตั้งด้วย Docker, คำสั่ง SQL พื้นฐาน, ดูตารางของโปรเจกต์ (ควรอ่านก่อนคู่มือที่ 3) |
 
 ---
 

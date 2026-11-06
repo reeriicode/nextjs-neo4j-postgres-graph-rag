@@ -677,4 +677,4 @@ RETURN DISTINCT p.name
 
 ---
 
-**ก่อนหน้า:** [คู่มือที่ 1: Next.js เบื้องต้น](01-nextjs-basics.md) · **ต่อไป:** [คู่มือที่ 3: โปรเจกต์ Graph RAG](03-graph-rag-project.md)
+**ก่อนหน้า:** [คู่มือที่ 1: Next.js เบื้องต้น](01-nextjs-basics.md) · **ต่อไป:** [คู่มือที่ 4: PostgreSQL เบื้องต้น](04-postgres-basics.md) แล้วจึง [คู่มือที่ 3: โปรเจกต์ Graph RAG](03-graph-rag-project.md)

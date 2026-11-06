@@ -6,7 +6,7 @@
 >
 > ทดสอบกับ Next.js 16.4, TypeORM 1.1, PostgreSQL 16, Neo4j 5.26, Windows 11
 >
-> ควรทำ [คู่มือที่ 1](01-nextjs-basics.md) และ [คู่มือที่ 2](02-neo4j-basics.md) ก่อน
+> ควรทำ [คู่มือที่ 1 (Next.js)](01-nextjs-basics.md), [คู่มือที่ 2 (Neo4j)](02-neo4j-basics.md) และ [คู่มือที่ 4 (PostgreSQL)](04-postgres-basics.md) ก่อน
 
 ---
 
@@ -2104,4 +2104,4 @@ POST /api/seed  ─►  POST /api/graph/build  ─►  POST /api/rag/ask  (ถ�
 
 ---
 
-**ก่อนหน้า:** [คู่มือที่ 2: Neo4j เบื้องต้น](02-neo4j-basics.md) · **กลับไปที่:** [คู่มือที่ 1: Next.js เบื้องต้น](01-nextjs-basics.md)
+**ดูเพิ่ม:** [คู่มือที่ 1: Next.js](01-nextjs-basics.md) · [คู่มือที่ 2: Neo4j](02-neo4j-basics.md) · [คู่มือที่ 4: PostgreSQL](04-postgres-basics.md)

@@ -2,12 +2,27 @@
 
 กรณีศึกษา **Graph RAG** กับระบบขายของแบบง่าย
 
-- **Next.js** (มีแค่ API, ไม่มีหน้าเว็บ)
+- **Next.js** หน้าเว็บพื้นฐาน (แบบในคู่มือที่ 1) + API
+- **Tailwind CSS** จัดหน้าเว็บ
 - **PostgreSQL + TypeORM** เก็บทั้งข้อมูลร้านค้าและ knowledge graph
 - **Neo4j** สำเนาของกราฟ ไว้ดูเป็นภาพและฝึกคำสั่ง Cypher
 - **Claude** ใช้ดึง entity จากข้อความ และใช้ตอบคำถาม
 
-ไม่มีระบบ login, ไม่มี migration, ไม่มี UI เพราะโปรเจกต์นี้มีไว้ศึกษาว่า Graph RAG ทำงานยังไงเท่านั้น
+ไม่มีระบบ login และไม่มี migration เพราะโปรเจกต์นี้มีไว้ศึกษาว่า Graph RAG ทำงานยังไงเท่านั้น
+
+## หน้าเว็บ
+
+เปิด http://localhost:3000 หลังรัน `npm run dev` (ต้องใส่ข้อมูลตัวอย่างก่อน ดู "วิธีรัน" ข้อ 4)
+
+| URL | ไฟล์ | สิ่งที่สอน |
+|---|---|---|
+| `/` | [src/app/page.tsx](src/app/page.tsx) | หน้าแรก, ลิงก์ด้วย `<Link>`, วนลูปสร้างการ์ดด้วย `.map()` |
+| `/about` | [src/app/about/page.tsx](src/app/about/page.tsx) | หน้าธรรมดา |
+| `/products` | [src/app/products/page.tsx](src/app/products/page.tsx) + [src/components/ProductList.tsx](src/components/ProductList.tsx) | **Client Component** (`"use client"`): ฟอร์ม + เรียก API ด้วย `fetch` |
+| `/products/1` | [src/app/products/[id]/page.tsx](src/app/products/[id]/page.tsx) | **Server Component**: อ่านฐานข้อมูลด้วย TypeORM ตรงๆ, ค่า `[id]` จาก URL |
+| `/ask` | [src/app/ask/page.tsx](src/app/ask/page.tsx) + [src/components/AskBox.tsx](src/components/AskBox.tsx) | หน้าถามคำถาม Graph RAG แสดงผลทุกขั้นตอน |
+
+เมนูด้านบนและฟอนต์ภาษาไทยอยู่ใน [src/app/layout.tsx](src/app/layout.tsx) (ใช้กับทุกหน้า)
 
 ## เอกสารประกอบการอบรม
 
@@ -77,6 +92,8 @@ npm run dev
 ```
 
 ตารางจะถูกสร้างอัตโนมัติตอนเรียก API ครั้งแรก (`synchronize: true`)
+
+> ถ้าแก้ `next.config.ts` ต้องหยุดแล้วรัน `npm run dev` ใหม่
 
 **4. ลองเรียก API ตามลำดับ** (ดูตัวอย่างทั้งหมดใน [requests.http](requests.http))
 
